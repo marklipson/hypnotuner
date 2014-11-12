@@ -1,0 +1,293 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis
+END
+adj_stereo.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/adj_stereo.java
+END
+bitrate_manager_state.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/bitrate_manager_state.java
+END
+vp_adjblock.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vp_adjblock.java
+END
+vorbis_info_residue0.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_info_residue0.java
+END
+vorbis_dsp_state.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_dsp_state.java
+END
+vorbis_info_mapping0.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_info_mapping0.java
+END
+vorbisenc.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbisenc.java
+END
+compandblock.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/compandblock.java
+END
+encode_aux_threshmatch.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/encode_aux_threshmatch.java
+END
+envelope_band.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/envelope_band.java
+END
+vorbis_block.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_block.java
+END
+ve_setup_data_template.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/ve_setup_data_template.java
+END
+vorbis_block_internal.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_block_internal.java
+END
+envelope_filter_state.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/envelope_filter_state.java
+END
+noise3.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/noise3.java
+END
+vorbis_look_floor1.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_look_floor1.java
+END
+private_state.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/private_state.java
+END
+att3.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/att3.java
+END
+highlevel_encode_setup.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/highlevel_encode_setup.java
+END
+mdct_lookup.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/mdct_lookup.java
+END
+lsfit_acc.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/lsfit_acc.java
+END
+encode_aux_nearestmatch.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/encode_aux_nearestmatch.java
+END
+noiseguard.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/noiseguard.java
+END
+vorbis_info_floor1.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_info_floor1.java
+END
+envelope_lookup.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/envelope_lookup.java
+END
+vorbis_info_mode.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_info_mode.java
+END
+static_codebook.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/static_codebook.java
+END
+ovectl_ratemanage2_arg.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/ovectl_ratemanage2_arg.java
+END
+vorbis_look_psy.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_look_psy.java
+END
+vorbis_look_psy_global.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_look_psy_global.java
+END
+drft_lookup.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/drft_lookup.java
+END
+vorbis_window.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_window.java
+END
+encode_aux_pigeonhole.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/encode_aux_pigeonhole.java
+END
+vorbis_info.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_info.java
+END
+vorbis_residue_template.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_residue_template.java
+END
+codec_setup_info.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/codec_setup_info.java
+END
+vorbis_look_residue0.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_look_residue0.java
+END
+alloc_chain.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/alloc_chain.java
+END
+oggpack_buffer.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/oggpack_buffer.java
+END
+vorbis_look_psy_arrays.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_look_psy_arrays.java
+END
+vorbis_mapping_template.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_mapping_template.java
+END
+codebook.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/codebook.java
+END
+highlevel_byblocktype.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/highlevel_byblocktype.java
+END
+static_bookblock.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/static_bookblock.java
+END
+vorbis_comment.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_comment.java
+END
+bitrate_manager_info.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/bitrate_manager_info.java
+END
+vorbis_info_psy.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_info_psy.java
+END
+vorbis_info_psy_global.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libvorbis/vorbis_info_psy_global.java
+END

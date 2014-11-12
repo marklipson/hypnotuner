@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen
+END
+MusicServlet.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen/MusicServlet.java
+END
+WavWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen/WavWriter.java
+END
+HypnoTuner.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen/HypnoTuner.java
+END
+VorbisEncoder.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen/VorbisEncoder.java
+END
+Speakers.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen/Speakers.java
+END
+TestServlet.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen/TestServlet.java
+END
+Test.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/marklipson_com/!svn/ver/445/MusicGen/trunk/src/com/marklipson/musicgen/Test.java
+END

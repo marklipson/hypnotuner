@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libogg
+END
+ogg_page.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libogg/ogg_page.java
+END
+ogg_sync_state.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libogg/ogg_sync_state.java
+END
+ogg_packet.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libogg/ogg_packet.java
+END
+ogg_stream_state.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/marklipson_com/!svn/ver/445/MusicGen/trunk/vorbis/org/xiph/libogg/ogg_stream_state.java
+END

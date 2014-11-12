@@ -1,0 +1,38 @@
+package com.marklipson.random;
+
+public class BloodOil
+{
+  public static void main( String[] args )
+  {
+    double bpd = 9e6;
+    double gpd = bpd * 42;
+    double deaths = 750000;  // 100k in 1990-91, 650k in 2003-06
+    double tDeaths = 20;
+    double deathsPerYear = deaths / tDeaths;
+    double deathsPerDay = deathsPerYear / 365.2425;
+    double pctFromGulf = 0.161;
+    double deathsPerGal = deathsPerDay / gpd;
+    double bloodPerPound = 4.7 / 160;  // 4.7 liters for avg 160lb person
+    double avgHumanWeight = 100; // 100lbs (see link, estimate attempts to factor in weight of children)
+    double bloodLitersPerHuman = bloodPerPound * avgHumanWeight;
+    double bloodPerGallon_l = bloodLitersPerHuman * deathsPerGal;
+    double bloodPerGallon_d = bloodPerGallon_l / 0.0005;
+    double usAvgGalPerYear = 450;
+    double us_people = gpd / (usAvgGalPerYear/365.2425);
+    double deaths_per_us_person = deaths / us_people;
+    double bloodPerDay_l = deathsPerDay * bloodPerPound * avgHumanWeight ;
+    System.out.println( "total us gas consumption, gal/day = " + gpd );
+    System.out.println( "total gulf war deaths per day (1990-2010 avg) = " + deathsPerDay );
+    System.out.println( "deaths per gallon = " + deathsPerGal );
+    System.out.println( "gallons per death = " + 1 / deathsPerGal );
+    System.out.println( "blood per gallon, liters  = " + bloodPerGallon_l );
+    System.out.println( "blood per gallon, drops  = " + bloodPerGallon_d );
+    System.out.println( "1 drop of blood per (n) gallons: " + 1 / bloodPerGallon_d );
+    System.out.println( "1 drop of blood per (n) gallons (persian gulf oil): " + (1 / bloodPerGallon_d) * pctFromGulf );
+    System.out.println( "drops of blood per year per US citizen: " + usAvgGalPerYear * bloodPerGallon_d );
+    System.out.println( "drops of blood, " + tDeaths + " years, per US citizen: " + usAvgGalPerYear * bloodPerGallon_d * tDeaths );
+    System.out.println( "deaths per person, " + tDeaths + " years = " + deaths_per_us_person + " ( " + us_people + ", " + us_people * deaths_per_us_person + ")" );
+    System.out.println( "total blood (gal) per us person " + deaths_per_us_person * bloodLitersPerHuman / 3.785 + " (" + bloodLitersPerHuman + ")" );
+    System.out.println( "total blood per day (l) = " + bloodPerDay_l + " (g) = " + bloodPerDay_l / 3.785 + " (g/m) = " + bloodPerDay_l / (1440 * 3.785) );
+  }
+}

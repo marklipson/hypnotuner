@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<project default="hypnotuner_build">
+    <target name="hypnotuner_build">
+        <jar basedir="${basedir}/bin" destfile="${basedir}/HypnoTuner.jar" excludes="org/**">
+            <manifest>
+                <attribute name="Main-Class" value="com.marklipson.musicgen.HypnoTuner"/>
+            </manifest>
+        </jar>
+    </target>
+</project>
