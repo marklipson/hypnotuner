@@ -3,6 +3,13 @@ hypnotuner
 
 Experimental meditation tone generator
 
+1) Put on headphones
+2) Shut down most other applications
+3) Start it up
+4) Twiddle the controls
+5) Once you get the hang of it, record yourself a session
+6) Close your eyes
+7) Load back your session and groove on it
 
 Main coding TODOs:
 * HypnoTuner class has both tone generation and UI - split them apart
