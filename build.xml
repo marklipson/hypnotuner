@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <project default="hypnotuner_build">
-    <target name="hypnotuner_build">
+    <target name="compile">
+        <mkdir dir="bin"/>
+        <javac destdir="bin"
+          classpath="lib/jfugue-4.0.3.jar:lib/servlet-api.jar"
+        >
+            <src path="src"/>
+            <src path="vorbis"/>
+        </javac>
+    </target>
+    <target name="hypnotuner_build" depends="compile">
         <jar basedir="${basedir}/bin" destfile="${basedir}/HypnoTuner.jar" excludes="org/**">
             <manifest>
                 <attribute name="Main-Class" value="com.marklipson.musicgen.HypnoTuner"/>
