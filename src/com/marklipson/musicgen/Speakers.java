@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.SourceDataLine;
 
-public class Speakers
+public class Speakers implements WaveSource.AudioTarget
 {
   AudioFormat format;
   SourceDataLine line;

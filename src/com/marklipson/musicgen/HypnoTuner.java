@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -27,9 +30,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
+
+import com.marklipson.musicgen.WaveSource.SmoothValue;
 
 public class HypnoTuner
 {
@@ -46,21 +55,11 @@ public class HypnoTuner
       "4) groove on it for a while\n" +
       "\n" +
       "Suggestions, etc: http://helianthusinc.com/contact.php";
-  // sampling rate, samples per second
-  int rate = 44100;
-  // - multiplier for sample number to get a 1Hz wave
-  double dt1;
-  //
-  long tStart = System.nanoTime();
-  long tOffset = 0;
-  // duration of fade-in / fade-out
-  double fade_s = 10;
-  // play position since start (samples)
-  long n = 0;
+  
   // number of harmonics that are controllable
-  int nHarmonics = 12;
-  // mute
-  SmoothValue muted = new SmoothValue( 0.4 );
+  int nHarmonics = 16;
+  WaveSource wave = new WaveSource( nHarmonics );
+
   // output
   Speakers speakers;
   JFrame frame;
@@ -69,10 +68,10 @@ public class HypnoTuner
   JSlider beatCycle;
   JSlider balCycle;
   JSlider harmonics[];
-  JToggleButton btn_mute, btnRecord;
-  
-  SmoothValue vA, vBlo, vBhi, vBalCycle, vBeatCycle;
-  SmoothValue vH[];
+  JSlider customLevel;
+  JTextField customFunction;
+  JToggleButton btn_mute, btnRecord, btnAudioRecord;
+  boolean initialLoad;
   
   JPanel lightBox;
   Set<PersistedValue> persisted = new HashSet<PersistedValue>();
@@ -83,20 +82,28 @@ public class HypnoTuner
   class PersistedValue
   {
     String name;
-    JSlider target;
-    public PersistedValue( String name, JSlider target )
+    JComponent target;
+    public PersistedValue( String name, JComponent target )
     {
       this.name = name;
       this.target = target;
     }
+    private Object getValue()
+    {
+      if (target instanceof JSlider)
+        return ((JSlider)target).getValue();
+      if (target instanceof JTextComponent)
+        return ((JTextComponent)target).getText();
+      return null;
+    }
     void save( Properties props )
     {
-      int value = target.getValue();
+      Object value = getValue();
       props.setProperty( name, String.valueOf( value ) );
     }
     void save( JSON props )
     {
-      int value = target.getValue();
+      Object value = getValue();
       props.set( name, value );
     }
     void load( Properties props )
@@ -106,31 +113,31 @@ public class HypnoTuner
         return;
       if (! strValue.matches( "\\-?\\d+" ))
         return;
-      target.setValue( Integer.parseInt( strValue ) );
+      setValue(strValue);
+    }
+    private void setValue(Object value)
+    {
+      if (value == null)
+        return;
+      if (target instanceof JSlider)
+      {
+        try
+        {
+          int v = Integer.parseInt( value.toString() );
+          ((JSlider)target).setValue( v );
+        }
+        catch( NumberFormatException x )
+        {
+        }
+      }
+      else if (target instanceof JTextComponent)
+        ((JTextComponent)target).setText( value.toString() );
     }
     void load( JSON props )
     {
-      int v = props.getInt( name, Integer.MAX_VALUE );
-      if (v == Integer.MAX_VALUE)
-        return;
-      target.setValue( v );
+      Object v = props.get( name );
+      setValue( v );
     }
-  }
-
-  /**
-   * Time for signal currently being generated.
-   */
-  double tGen()
-  {
-    return (double)n / rate;
-  }
-  /**
-   * Time in signal currently being played.
-   */
-  double tReal()
-  {
-    long tN = System.nanoTime() - tStart + tOffset;
-    return tN/1e9;
   }
   
   void pulseLight()
@@ -140,8 +147,8 @@ public class HypnoTuner
       void update()
       {
         //System.out.println( tOffset );
-        double tBal = track_balance.retrieve();
-        double tBeat = track_beat.retrieve();
+        double tBal = wave.track_balance.retrieve();
+        double tBeat = wave.track_beat.retrieve();
         setLevel( -Math.sin( tBeat ), Math.sin( tBal ) );
       }
       public void run()
@@ -183,55 +190,9 @@ public class HypnoTuner
     g.fillOval( x2 - r2/2, h*3/4 - r2/2, r2, r2 );
   }
   
-  class SmoothValue
-  {
-    double vNow = Double.NaN;
-    double vTarget;
-    double tPrev;
-    double speed;
-    boolean geometric;
-    SmoothValue( double speed )
-    {
-      this( speed, true );
-    }
-    SmoothValue( double speed, boolean geometric )
-    {
-      this.speed = speed;
-      this.geometric = geometric;
-      tPrev = tGen();
-    }
-    double getValue()
-    {
-      double tNow = tGen();
-      double tE = tNow - tPrev;
-      tPrev = tNow;
-      double approach = 1 - Math.pow( speed, tE );
-      /*
-      if (geometric)
-      {
-        double delta = vTarget / vNow;
-        vNow = vNow * delta * approach;
-      }
-      else
-      */
-      {
-        double delta = vTarget - vNow;
-        vNow += delta * approach;
-      }
-      return vNow;
-    }
-    void setValue( double v )
-    {
-      if (Double.isNaN( vNow ))
-        vNow = v;
-      vTarget = v;
-    }
-  }
-
   HypnoTuner( File storeSettingsHere )
   {
     this.settingsFile = storeSettingsHere;
-    dt1 = Math.PI * 2 / rate;
   }
   
   public void autoSaveSettings()
@@ -279,9 +240,11 @@ public class HypnoTuner
       JSON settings = JSON.loadFromFile( settingsFile );
       if (settings == null)
         return;
+      initialLoad = true;
       JSON controls = settings.getComplex( "controls" );
       if (controls != null)
         setSaveState( controls );
+      initialLoad = false;
       String dir = settings.getString( "folder" );
       if (dir != null)
         currentDir = new File( dir );
@@ -300,14 +263,15 @@ public class HypnoTuner
   public void setupSound() throws Exception
   {
     System.out.println( "Acquiring audio line (e.g. speakers)" );
-    speakers = new Speakers( rate );
+    speakers = new Speakers( wave.getRate() );
+    wave.setAudioTarget( speakers );
   }
   void buildFrame()
   {
     frame = new JFrame( "HypnoTuner" );
-    frame.setSize( 1000, 400 );
+    frame.setSize( 1000, 500 );
     JRootPane root = frame.getRootPane();
-    root.setLayout( new GridLayout( 11 + nHarmonics, 1 ) );
+    root.setLayout( new GridLayout( 13 + nHarmonics, 1 ) );
     toneA = new JSlider( 2500, 5500, 3723 );
     toneA.setToolTipText( "base frequency" );
     diffBlo = new JSlider( -2500, 4000, 832 );
@@ -331,23 +295,53 @@ public class HypnoTuner
       harmonics[nH].setToolTipText( "Percentage of " + (nH+1) + "th harmonic." );
       // TODO different color
     }
-    vA = new SmoothValue( 0.4 );
-    vBlo = new SmoothValue( 0.4, false );
-    vBhi = new SmoothValue( 0.4, false );
-    vBalCycle = new SmoothValue( 0.4 );
-    vBeatCycle = new SmoothValue( 0.4 );
-    root.add( decorateSlider( "A: (hz)", toneA, 0.001, true, vA ) );
-    root.add( decorateSlider( "B-delta-lo: (hz)", diffBlo, 0.001, true, vBlo ) );
-    root.add( decorateSlider( "B-delta-hi: (hz)", diffBhi, 0.001, true, vBhi ) );
-    root.add( decorateSlider( "beatCycle: (s)", beatCycle, 0.001, true, vBeatCycle ) );
-    root.add( decorateSlider( "balanceCycle: (s)", balCycle, 0.001, true, vBalCycle ) );
-    lightBox = new JPanel();
-    vH = new SmoothValue[ harmonics.length ];
-    for (int nh=0; nh < harmonics.length; nh++)
+    customLevel = new JSlider( 0, 100000, 0 );
+    customLevel.setToolTipText( "Level for custom waveform" );
+    customFunction = new JTextField();
+    customFunction.setToolTipText( "Custom waveform - f(t)" );
+    customFunction.getDocument().addDocumentListener( new DocumentListener()
     {
-      vH[nh] = new SmoothValue( 0.4, false );
-      root.add( decorateSlider( "h(" + (nh+1) + "):", harmonics[nh], 0.001, false, vH[nh] ) );
-    }
+      private void update()
+      {
+        String expr = customFunction.getText();
+        try
+        {
+          TimeFunction.CompiledFunction fn = TimeFunction.compile( expr );
+          fn.autoSetScale();
+          if (fn != null)
+            wave.setCustomFunction( fn );
+        }
+        catch( Exception x )
+        {
+        }
+      }
+      @Override
+      public void removeUpdate(DocumentEvent e)
+      {
+        update();
+      }
+      @Override
+      public void insertUpdate(DocumentEvent e)
+      {
+        update();
+      }
+      @Override
+      public void changedUpdate(DocumentEvent e)
+      {
+        update();
+      }
+    });
+    
+    root.add( decorateSlider( "A: (hz)", toneA, 0.001, true, wave.vA ) );
+    root.add( decorateSlider( "B-delta-lo: (hz)", diffBlo, 0.001, true, wave.vBlo ) );
+    root.add( decorateSlider( "B-delta-hi: (hz)", diffBhi, 0.001, true, wave.vBhi ) );
+    root.add( decorateSlider( "beatCycle: (s)", beatCycle, 0.001, true, wave.vBeatCycle ) );
+    root.add( decorateSlider( "balanceCycle: (s)", balCycle, 0.001, true, wave.vBalCycle ) );
+    lightBox = new JPanel();
+    for (int nh=0; nh < harmonics.length; nh++)
+      root.add( decorateSlider( "h(" + (nh+1) + "):", harmonics[nh], 0.001, false, wave.vH[nh] ) );
+    root.add( decorateSlider( "custom level:", customLevel, 0.00001, false, wave.customLevel ) );
+    root.add( decorateOther( "custom function:", customFunction ) );
     root.add( new JLabel("") );
     root.add( new JLabel("") );
     Box controls = Box.createHorizontalBox();
@@ -488,6 +482,39 @@ public class HypnoTuner
       }
     });
     controls.add( btnRecord );
+    // AUDIO RECORD
+    btnAudioRecord = new JToggleButton( "stream" );
+    btnAudioRecord.addActionListener( new ActionListener()
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        if (btnAudioRecord.isSelected())
+        {
+          // start streaming audio
+          JFileChooser c = new JFileChooser();
+          c.setDialogTitle( "Save Audio" );
+          c.setCurrentDirectory( currentDir );
+          if (c.showSaveDialog( frame ) == JFileChooser.APPROVE_OPTION)
+          {
+            File saveAs = c.getSelectedFile();
+            if (saveAs.exists())
+              if (JOptionPane.showConfirmDialog( frame, "File exists, overwrite?" ) != JOptionPane.OK_OPTION)
+                return;
+            controlStreaming( true, saveAs );
+            btnAudioRecord.setText( "STREAMING" );
+          }
+          currentDir = c.getCurrentDirectory();
+        }
+        else
+        {
+          // stop streaming audio
+          btnAudioRecord.setText( "stream" );
+          controlStreaming( false, null );
+        }
+      }
+    });
+    controls.add( btnAudioRecord );
     // MUTE
     btn_mute = new JToggleButton( "mute" );
     btn_mute.addActionListener( new ActionListener()
@@ -495,10 +522,10 @@ public class HypnoTuner
       @Override
       public void actionPerformed( ActionEvent e )
       {
-        muted.setValue( btn_mute.isSelected() ? 0 : 1 );
+        wave.mute( btn_mute.isSelected() );
       }
     });
-    muted.setValue( 1 );
+    wave.mute( false );
     controls.add( btn_mute );
     controls.add( lightBox );
     root.add( controls );
@@ -509,7 +536,7 @@ public class HypnoTuner
       @Override
       public void windowClosing( WindowEvent e )
       {
-        tFade = tGen();
+        wave.fade( true );
         new Thread("exit")
         {
           public void run()
@@ -594,15 +621,58 @@ public class HypnoTuner
       recordingThread = null;
     }
   }
+
+  /**
+   * Start/stop audio streaming.
+   */
+  private AudioFileEncoder audioEncoder;
   
-  public boolean isMuted()
+  public void controlStreaming( boolean state, File output )
   {
-    return muted.getValue() < 0.1;
+    try
+    {
+      if (state)
+      {
+        audioEncoder = new AudioFileEncoder( wave.getRate(), output );
+      }
+      else
+      {
+        AudioFileEncoder encoder = audioEncoder;
+        // stop sending data
+        audioEncoder = null;
+        // write out file
+        //FIXME NEEDS PROGRESS BAR!!!
+        encoder.close();
+      }
+    }
+    catch( Exception x )
+    {
+      JOptionPane.showMessageDialog( frame, x );
+    }
   }
+  
   public void mute( boolean s )
   {
     btn_mute.setSelected( s );
-    muted.setValue( s ? 0 : 1 );
+    wave.mute( s );
+  }
+  public boolean isMuted()
+  {
+    return wave.isMuted();
+  }
+  JComponent decorateOther( String label, final JComponent component )
+  {
+    Box box = Box.createHorizontalBox();
+    box.setBorder( BorderFactory.createEmptyBorder( 0/*T*/, 10/*L*/, 0/*B*/, 10/*R*/ ) );
+    JLabel lbl = new JLabel( label );
+    lbl.setPreferredSize( new Dimension( 120, lbl.getSize().height ) );
+    box.add( lbl );
+    box.add( component );
+    String tag = label;
+    tag = tag.replaceFirst( "([^:]*).*", "$1" );
+    tag = tag.replaceFirst( "(.*)\\((.*)\\)", "$1_$2" );
+    persisted.add( new PersistedValue( tag, component ) );
+    return box;
   }
   JComponent decorateSlider( String label, final JSlider slider, final double factor, final boolean log, final SmoothValue v )
   {
@@ -626,7 +696,7 @@ public class HypnoTuner
           value = Math.exp( value );
         String str = String.format( "%.2f", value );
         showValue.setText( str );
-        v.setValue( value );
+        v.setValue( value, initialLoad );
       }
     };
     slider.addChangeListener( updateValue );
@@ -660,132 +730,54 @@ public class HypnoTuner
       v.load( props );
   }
 
-  private double waveform( double t )
+  static private boolean enableLog = false;
+  static private long logT0 = System.nanoTime();
+  static private PrintStream logStream;
+  static private void log( String msg )
   {
-    double tot = 0;
-    for (int nh=0; nh < vH.length; nh++)
-      tot += vH[nh].getValue();
-    if (tot == 0)
-      tot = 1;
-    double v = 0;
-    for (int nh=0; nh < vH.length; nh++)
+    if (! enableLog)
+      return;
+    try
     {
-      double h = Math.sin( t * (nh+1) );
-      double level = vH[nh].getValue() / tot;
-      v += h * level;
+      if (logStream == null)
+      {
+        String date = new SimpleDateFormat( "HHmm" ).format( new Date() );
+        logStream = new PrintStream( "/Users/marklipson/Desktop/hypnotuner-debug-" + date + ".log" );
+      }
+      logStream.println( (System.nanoTime()-logT0)/1e9 + "\t" + msg );
+      logStream.flush();
     }
-    return v;
-  }
-    
-  /**
-   * Values are not generated in real time, so we save some of them, to know what they actually are in real time.
-   */
-  class TrackValue
-  {
-    double list[] = new double[ 400 ];
-    int index( double t )
+    catch( Exception x )
     {
-      long tN = (long)(t / 100);
-      return (int)(tN % list.length);
-    }
-    void store( double v )
-    {
-      double t = tGen();
-      list[ index(t) ] = v;
-    }
-    double retrieve()
-    {
-      double t = tReal();
-      return list[ index(t) ];
+      x.printStackTrace( System.err );
     }
   }
-  // - time values
-  double tL = 0, tR = 0;
-  double tBeat = 0;
-  double tBal = 0;
-  double tFade = 0;
-  TrackValue track_balance = new TrackValue();
-  TrackValue track_beat = new TrackValue();
-
   void playSome() throws Exception
   {
     // number of seconds
     double nSeconds = 0.1;
     double maxBufferLevel = 0.5; // starts clicking on some systems below 0.3
-    if (tFade > 0)
+    if (wave.isFading())
       maxBufferLevel = 5; // we can buffer as much as we like now
     int bufferDelay = 10;
-    // values for loop
-    // - output values
-    float[] vL = new float[ (int)(rate * nSeconds) ];
-    float[] vR = new float[ (int)(rate * nSeconds) ];
+    log( speakers.getBufferLevel() + "\tdelay" );
     while (speakers.getBufferLevel() > maxBufferLevel)
     {
       Thread.sleep( bufferDelay );
       //System.out.println( "d: " + speakers.getBufferLevel() );
     }
-    {
-      long tReal = System.nanoTime() - tStart;
-      long tGen = (long)((tGen() - speakers.getBufferLevel()) * 1e9);
-      tOffset = tGen - tReal;
-      //System.out.println( "tOffs: " + tOffset );
-    }
-    for (int index=0; index < vL.length; index++, n++)
-    {
-      // cycle tone B between hi and lo, every (beatCycle)
-      double beatCycle = vBeatCycle.getValue();
-      tBeat += dt1 / beatCycle;
-      track_beat.store( tBeat );
-      double slowVariation = Math.sin( tBeat );
-      // base frequency
-      double fL = vA.getValue();
-      tL += fL * dt1;
-      double L = waveform( tL );
-      // - range of frequency delta for right channel
-      double lowBeatHz = vBlo.getValue();
-      double highBeatHz = vBhi.getValue();
-      double midBeatHz = (lowBeatHz + highBeatHz) / 2;
-      double rBeat = highBeatHz - midBeatHz;
-      double fR = fL + midBeatHz + rBeat * slowVariation;
-      tR += fR * dt1;
-      double R = waveform( tR );
-      // - swing balance back and forth in a cycle lasting this many seconds
-      double balanceSwingCycle = vBalCycle.getValue();
-      tBal += dt1 / balanceSwingCycle;
-      track_balance.store( tBal );
-      double bL = (Math.sin( tBal ) + 1) / 2;
-      double bR = 1 - bL;
-      vL[index] = (float)(L * bL + R * bR);
-      vR[index] = (float)(R * bL + L * bR);
-      // fade in/out
-      double tS = tGen();
-      double fade = softenEdges( tS, fade_s );
-      if (tFade > 0)
-      {
-        double tNow = (double)n/rate;
-        double tF = tNow - tFade;
-        fade *= Math.pow( 0.15, tF );
-      }
-      fade *= muted.getValue();
-      vL[index] *= fade;
-      vR[index] *= fade;
-    }
+    log( speakers.getBufferLevel() + "\tgenerate" );
+    // values for loop
+    int nSamples = (int)(wave.getRate() * nSeconds);
+    float vLR[][] = wave.generate( nSamples );
+    if (audioEncoder != null)
+      audioEncoder.write( vLR[0], vLR[1] );
     //System.out.println( "first=" + vL[0] + ", last=" + vL[vL.length-1] );
-    speakers.play( vL, vR );
+    log( speakers.getBufferLevel() + "\tplay" );
+    speakers.play( vLR[0], vLR[1] );
+    log( speakers.getBufferLevel() + "\tdone" );
   }
-  
-  /**
-   * t == 0 to 1  (0 = start, 1 = end)
-   * width == duration of fade-in/out, i.e. 0.01
-   * return == 0 to 1 (0 = silent, 1 = full volume)
-   */
-  private static double softenEdges( double t, double width )
-  {
-    if (t < width)
-      return t / width;
-    return 1;
-  }
-  
+    
   private void playContinuously()
   {
     Thread thread = new Thread("play")
@@ -839,10 +831,18 @@ public class HypnoTuner
 }
 
 
+//TODO auto-fade output files
+//TODO default 'ogg' file extension for stream
+
 //TODO store settings as real values, not internal integer values from sliders
 
-//TODO pull all the tone generation out of the UI
 //TODO separate options panel...
 //  - anti-glitch options (or better, make it never click, or auto-adjust, etc.)
 //  - whether to show lots of harmonics
-//TODO limit view to relevant files?  default file extension?
+//TODO limit view to relevant files?  default '.trance' file extension?
+
+
+//speculative:
+//TODO custom harmonics - choose a multiplier and an amplitude
+//TODO separate L/R controls
+//TODO math-script option - enter it in a text box: sin(t*30+sin(t*2)) - sin cos * + - / ^ (n) (t) () pi impl* -- autoscale
